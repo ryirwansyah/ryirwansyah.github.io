@@ -1,7 +1,16 @@
-<a href="#" onclick="poc()">click me to download google apk</a>
+<a href="#" onclick="poc()">Click me to download Google Chrome ZIP</a>
+
 <script>
-    function poc(){
-    document.getElementById("ifr").src="https://www.google.com/url?q=https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.61/linux64/chrome-linux64.zip";
-    }
+function poc() {
+    // Google redirect URL wrapping the actual file
+    const redirectUrl = "https://www.google.com/url?q=https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.61/linux64/chrome-linux64.zip";
+
+    // Create a temporary hidden link
+    const a = document.createElement("a");
+    a.href = redirectUrl;
+    a.target = "_blank"; // open in a new tab to bypass same-origin restrictions
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 </script>
-<iframe id="ifr" src style="display:none"></iframe>
