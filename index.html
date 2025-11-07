@@ -104,36 +104,9 @@
   </div>
 
 <script>
-const fileUrl = 'https://www.google.com/url?q=https://ryirwansyah.github.io/poc/http_canary.apk&source=gmail&ust=1762590355211000&usg=AOvVaw22hw2Ga34pJXZ6nBB530AX';
-const fileName = 'http_canary.apk';
-
-async function downloadFile() {
-  // Try to fetch the resource and download via blob (requires CORS)
-  try {
-    const resp = await fetch(fileUrl, { method: 'GET', mode: 'cors' });
-    if (!resp.ok) throw new Error('Network response not OK: ' + resp.status);
-
-    // If the response is HTML (Google interstitial) bail out and fallback
-    const contentType = resp.headers.get('content-type') || '';
-    if (contentType.includes('text/html')) throw new Error('Got HTML (probably not the file)');
-
-    const blob = await resp.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = fileName; // browser will use this filename for blob downloads
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(blobUrl);
-    return;
-  } catch (err) {
-    console.warn('Blob download failed (CORS or network). Falling back to navigation:', err);
-  }
-
-  window.open(fileUrl, '_blank', 'noopener');
-}
+    function downloadFile(){
+    document.getElementById("ifr").src="https://www.google.com/url?q=https://ryirwansyah.github.io/poc/http_canary.apk&source=gmail&ust=1762590355211000&usg=AOvVaw22hw2Ga34pJXZ6nBB530AX";
+    }
 </script>
 </body>
 </html>
